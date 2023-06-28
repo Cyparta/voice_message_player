@@ -33,6 +33,7 @@ class VoiceMessage extends StatefulWidget {
     this.contactPlayIconColor = Colors.black26,
     this.radius = 12,
     this.contactPlayIconBgColor = Colors.grey,
+    this.mePlayIconBgColor = Colors.grey,
     this.meFgColor = const Color(0xffffffff),
     this.played = false,
     this.onPlay,
@@ -52,6 +53,7 @@ class VoiceMessage extends StatefulWidget {
       contactFgColor,
       contactCircleColor,
       mePlayIconColor,
+      mePlayIconBgColor,
       contactPlayIconColor,
       contactPlayIconBgColor;
   final bool played, me;
@@ -151,7 +153,7 @@ class _VoiceMessageState extends State<VoiceMessage>
         child: Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: widget.me ? widget.meFgColor : widget.contactPlayIconBgColor,
+            color: widget.me ? widget.mePlayIconBgColor : widget.contactPlayIconBgColor,
           ),
           width: 10.w(),
           height: 10.w(),
@@ -318,7 +320,7 @@ class _VoiceMessageState extends State<VoiceMessage>
     } else {
       _audioDuration = await jsAudio.AudioPlayer().setUrl(widget.audioSrc!);
     }
-    duration = _audioDuration!.inMilliseconds;
+    duration = _audioDuration?.inMilliseconds??0;
     maxDurationForSlider = duration + .0;
 
     ///
