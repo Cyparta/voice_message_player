@@ -340,7 +340,7 @@ class _VoiceMessageState extends State<VoiceMessage>
         setState(() {});
       }
     });
-    _setAnimationConfiguration(_audioDuration!);
+    _setAnimationConfiguration(_audioDuration??const Duration());
   }
 
   void _setAnimationConfiguration(Duration audioDuration) async {
