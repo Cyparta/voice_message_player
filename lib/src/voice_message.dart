@@ -324,12 +324,14 @@ class _VoiceMessageState extends State<VoiceMessage>
     maxDurationForSlider = duration + .0;
 
     ///
-    _controller = AnimationController(
-      vsync: this,
-      lowerBound: 0,
-      upperBound: noiseWidth,
-      duration: _audioDuration,
-    );
+   if(mounted){
+     _controller = AnimationController(
+       vsync: this,
+       lowerBound: 0,
+       upperBound: noiseWidth,
+       duration: _audioDuration,
+     );
+   }
 
     ///
     _controller!.addListener(() {
