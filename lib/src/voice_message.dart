@@ -334,7 +334,7 @@ class _VoiceMessageState extends State<VoiceMessage>
    }
 
     ///
-    _controller!.addListener(() {
+    _controller?.addListener(() {
       if (_controller!.isCompleted) {
         _controller!.reset();
         _isPlaying = false;
