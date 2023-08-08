@@ -352,7 +352,9 @@ class _VoiceMessageState extends State<VoiceMessage>
       });
     }
     debugPrint("_setAnimationConfiguration $_remainingTime");
-    _completeAnimationConfiguration();
+    if(mounted){
+      _completeAnimationConfiguration();
+    }
   }
 
   void _completeAnimationConfiguration() =>
