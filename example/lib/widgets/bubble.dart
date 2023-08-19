@@ -10,7 +10,7 @@ import '../helpers/style.dart';
 
 ///
 // ignore: must_be_immutable
-class Bubble extends StatefulWidget {
+class Bubble extends StatelessWidget {
   Bubble({
     required this.me,
     required this.index,
@@ -23,31 +23,11 @@ class Bubble extends StatefulWidget {
   final String msg;
 
   @override
-  State<Bubble> createState() => _BubbleState();
-}
-
-class _BubbleState extends State<Bubble> {
-  late AudioPlayer audioPlayer;
-
-  @override
-  void initState() {
-    super.initState();
-    audioPlayer = AudioPlayer();
-  }
-
-
-  @override
-  void dispose() {
-    super.dispose();
-    audioPlayer.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) => Container(
         margin: EdgeInsets.symmetric(horizontal: 5.2.w, vertical: 2.w),
         child: Wrap(
           crossAxisAlignment: WrapCrossAlignment.end,
-          textDirection: widget.me ? TextDirection.rtl : TextDirection.ltr,
+          textDirection: me ? TextDirection.rtl : TextDirection.ltr,
           children: [
             _bubble(context),
             SizedBox(width: 2.w),
@@ -56,35 +36,34 @@ class _BubbleState extends State<Bubble> {
         ),
       );
 
-  Widget _bubble(BuildContext context) => widget.voice
+  Widget _bubble(BuildContext context) => voice
       ? VoiceMessage(
           audioSrc: 'https://sounds-mp3.com/mp3/0012660.mp3',
-          me: widget.index == 5 ? false : true,
-          player: audioPlayer,
+          me: index == 5 ? false : true,
         )
       : Container(
           constraints: BoxConstraints(maxWidth: 100.w * .7),
           padding: EdgeInsets.symmetric(
             horizontal: 4.w,
-            vertical: widget.voice ? 2.8.w : 2.5.w,
+            vertical: voice ? 2.8.w : 2.5.w,
           ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(6.w),
-              bottomLeft: widget.me ? Radius.circular(6.w) : Radius.circular(2.w),
-              bottomRight: !widget.me ? Radius.circular(6.w) : Radius.circular(1.2.w),
+              bottomLeft: me ? Radius.circular(6.w) : Radius.circular(2.w),
+              bottomRight: !me ? Radius.circular(6.w) : Radius.circular(1.2.w),
               topRight: Radius.circular(6.w),
             ),
-            color: widget.me ? AppColors.pink : Colors.white,
-            boxShadow: widget.me
+            color: me ? AppColors.pink : Colors.white,
+            boxShadow: me
                 ? S.pinkShadow(shadow: AppColors.pink100)
                 : [S.boxShadow(context, opacity: .05)],
           ),
           child: Text(
-            widget.msg,
+            msg,
             style: TextStyle(
               fontSize: 13.2,
-              color: widget.me ? Colors.white : Colors.black,
+              color: me ? Colors.white : Colors.black,
             ),
           ),
         );
@@ -93,14 +72,14 @@ class _BubbleState extends State<Bubble> {
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          if (widget.me)
+          if (me)
             Icon(
               Icons.done_all_outlined,
               color: AppColors.pink,
               size: 3.4.w,
             ),
           Text(
-            '1:' '${widget.index + 30}' ' PM',
+            '1:' '${index + 30}' ' PM',
             style: const TextStyle(fontSize: 11.8),
           ),
           SizedBox(height: .2.w)
