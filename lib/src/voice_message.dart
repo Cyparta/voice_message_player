@@ -352,9 +352,7 @@ class _VoiceMessageState extends State<VoiceMessage>
       });
     }
     debugPrint("_setAnimationConfiguration $_remainingTime");
-    if(mounted){
-      _completeAnimationConfiguration();
-    }
+    _completeAnimationConfiguration();
   }
 
   void _completeAnimationConfiguration() =>
@@ -364,7 +362,7 @@ class _VoiceMessageState extends State<VoiceMessage>
   //   x2 = !x2;
   //   _controller!.duration = Duration(seconds: x2 ? duration ~/ 2 : duration);
   //   if (_controller!.isAnimating) _controller!.forward();
-  //   _player.setPlaybackRate(x2 ? 2 : 1);
+  //   widget.player.setPlaybackRate(x2 ? 2 : 1);
   //   setState(() {});
   // }
 
@@ -377,7 +375,6 @@ class _VoiceMessageState extends State<VoiceMessage>
   @override
   void dispose() {
     stream.cancel();
-    _player.dispose();
     _controller?.dispose();
     super.dispose();
   }
