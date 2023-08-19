@@ -12,7 +12,7 @@ dependencies:
   sizer:
   voice_message_package: 
     path: ../
-
+  audioplayers: ^3.0.1
 
 
 dev_dependencies:

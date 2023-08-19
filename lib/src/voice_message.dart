@@ -32,6 +32,7 @@ class VoiceMessage extends StatefulWidget {
     this.mePlayIconColor = Colors.black,
     this.contactPlayIconColor = Colors.black26,
     this.radius = 12,
+    required this.player,
     this.contactPlayIconBgColor = Colors.grey,
     this.mePlayIconBgColor = Colors.grey,
     this.meFgColor = const Color(0xffffffff),
@@ -40,6 +41,7 @@ class VoiceMessage extends StatefulWidget {
   }) : super(key: key);
 
   final String? audioSrc;
+  final AudioPlayer player;
   Future<File>? audioFile;
   final Duration? duration;
   final bool showDuration;
@@ -68,7 +70,6 @@ class VoiceMessage extends StatefulWidget {
 class _VoiceMessageState extends State<VoiceMessage>
     with SingleTickerProviderStateMixin {
   late StreamSubscription stream;
-  final AudioPlayer _player = AudioPlayer();
   final double maxNoiseHeight = 6.w(), noiseWidth = 28.5.w();
   Duration? _audioDuration;
   double maxDurationForSlider = .0000001;
@@ -85,7 +86,7 @@ class _VoiceMessageState extends State<VoiceMessage>
 
     _setDuration();
     super.initState();
-    stream = _player.onPlayerStateChanged.listen((event) {
+    stream = widget.player.onPlayerStateChanged.listen((event) {
       switch (event) {
         case PlayerState.stopped:
           break;
@@ -96,7 +97,7 @@ class _VoiceMessageState extends State<VoiceMessage>
           setState(() => _isPlaying = false);
           break;
         case PlayerState.completed:
-          _player.seek(const Duration(milliseconds: 0));
+          widget.player.seek(const Duration(milliseconds: 0));
           setState(() {
             duration = _audioDuration!.inMilliseconds;
             _remainingTime = widget.formatDuration!(_audioDuration!);
@@ -106,7 +107,7 @@ class _VoiceMessageState extends State<VoiceMessage>
           break;
       }
     });
-    _player.onPositionChanged.listen(
+    widget.player.onPositionChanged.listen(
       (Duration p) => setState(
         () => _remainingTime = widget.formatDuration!(p),
       ),
@@ -302,15 +303,15 @@ class _VoiceMessageState extends State<VoiceMessage>
     if (widget.audioFile != null) {
       String path = (await widget.audioFile!).path;
       debugPrint("> _startPlaying path $path");
-      await _player.play(DeviceFileSource(path));
+      await widget.player.play(DeviceFileSource(path));
     } else if (widget.audioSrc != null) {
-      await _player.play(UrlSource(widget.audioSrc!));
+      await widget.player.play(UrlSource(widget.audioSrc!));
     }
     _controller!.forward();
   }
 
   _stopPlaying() async {
-    await _player.pause();
+    await widget.player.pause();
     _controller!.stop();
   }
 
@@ -364,7 +365,7 @@ class _VoiceMessageState extends State<VoiceMessage>
   //   x2 = !x2;
   //   _controller!.duration = Duration(seconds: x2 ? duration ~/ 2 : duration);
   //   if (_controller!.isAnimating) _controller!.forward();
-  //   _player.setPlaybackRate(x2 ? 2 : 1);
+  //   widget.player.setPlaybackRate(x2 ? 2 : 1);
   //   setState(() {});
   // }
 
@@ -377,7 +378,6 @@ class _VoiceMessageState extends State<VoiceMessage>
   @override
   void dispose() {
     stream.cancel();
-    _player.dispose();
     _controller?.dispose();
     super.dispose();
   }
@@ -388,7 +388,7 @@ class _VoiceMessageState extends State<VoiceMessage>
     duration = d.round();
     _controller?.value = (noiseWidth) * duration / maxDurationForSlider;
     _remainingTime = widget.formatDuration!(_audioDuration!);
-    await _player.seek(Duration(milliseconds: duration));
+    await widget.player.seek(Duration(milliseconds: duration));
     setState(() {});
   }
 }
