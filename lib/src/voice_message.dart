@@ -68,7 +68,7 @@ class VoiceMessage extends StatefulWidget {
 class _VoiceMessageState extends State<VoiceMessage>
     with SingleTickerProviderStateMixin {
   late StreamSubscription stream;
-  final AudioPlayer _player = AudioPlayer();
+  final AudioPlayer player = AudioPlayer();
   final double maxNoiseHeight = 6.w(), noiseWidth = 28.5.w();
   Duration? _audioDuration;
   double maxDurationForSlider = .0000001;
@@ -85,7 +85,7 @@ class _VoiceMessageState extends State<VoiceMessage>
 
     _setDuration();
     super.initState();
-    stream = _player.onPlayerStateChanged.listen((event) {
+    stream = player.onPlayerStateChanged.listen((event) {
       switch (event) {
         case PlayerState.stopped:
           break;
@@ -96,7 +96,7 @@ class _VoiceMessageState extends State<VoiceMessage>
           setState(() => _isPlaying = false);
           break;
         case PlayerState.completed:
-          _player.seek(const Duration(milliseconds: 0));
+          player.seek(const Duration(milliseconds: 0));
           setState(() {
             duration = _audioDuration!.inMilliseconds;
             _remainingTime = widget.formatDuration!(_audioDuration!);
@@ -106,7 +106,7 @@ class _VoiceMessageState extends State<VoiceMessage>
           break;
       }
     });
-    _player.onPositionChanged.listen(
+    player.onPositionChanged.listen(
       (Duration p) => setState(
         () => _remainingTime = widget.formatDuration!(p),
       ),
@@ -137,7 +137,7 @@ class _VoiceMessageState extends State<VoiceMessage>
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _playButton(context),
+              playButton(context),
               SizedBox(width: 3.w()),
               _durationWithNoise(context),
               SizedBox(width: 2.2.w()),
@@ -149,7 +149,7 @@ class _VoiceMessageState extends State<VoiceMessage>
         ),
       );
 
-  Widget _playButton(BuildContext context) => InkWell(
+  Widget playButton(BuildContext context) => InkWell(
         child: Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
@@ -269,7 +269,7 @@ class _VoiceMessageState extends State<VoiceMessage>
                 child: Slider(
                   min: 0.0,
                   max: maxDurationForSlider,
-                  onChangeStart: (__) => _stopPlaying(),
+                  onChangeStart: (__) => stopPlaying(),
                   onChanged: (_) => _onChangeSlider(_),
                   value: duration + .0,
                 ),
@@ -298,19 +298,19 @@ class _VoiceMessageState extends State<VoiceMessage>
   //       ),
   //     );
 
-  void _startPlaying() async {
+  void startPlaying() async {
     if (widget.audioFile != null) {
       String path = (await widget.audioFile!).path;
       debugPrint("> _startPlaying path $path");
-      await _player.play(DeviceFileSource(path));
+      await player.play(DeviceFileSource(path));
     } else if (widget.audioSrc != null) {
-      await _player.play(UrlSource(widget.audioSrc!));
+      await player.play(UrlSource(widget.audioSrc!));
     }
     _controller!.forward();
   }
 
-  _stopPlaying() async {
-    await _player.pause();
+  stopPlaying() async {
+    await player.pause();
     _controller!.stop();
   }
 
@@ -368,7 +368,7 @@ class _VoiceMessageState extends State<VoiceMessage>
 
   void _changePlayingStatus() async {
     if (widget.onPlay != null) widget.onPlay!();
-    _isPlaying ? _stopPlaying() : _startPlaying();
+    _isPlaying ? stopPlaying() : startPlaying();
     setState(() => _isPlaying = !_isPlaying);
   }
 
@@ -385,7 +385,7 @@ class _VoiceMessageState extends State<VoiceMessage>
     duration = d.round();
     _controller?.value = (noiseWidth) * duration / maxDurationForSlider;
     _remainingTime = widget.formatDuration!(_audioDuration!);
-    await _player.seek(Duration(milliseconds: duration));
+    await player.seek(Duration(milliseconds: duration));
     setState(() {});
   }
 }
