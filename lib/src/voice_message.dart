@@ -45,8 +45,6 @@ class VoiceMessage extends StatefulWidget {
   final bool showDuration;
   final List<double>? waveForm;
   final double radius;
-  late final AudioPlayer myPlayer;
-  late final AnimationController myController;
   final int noiseCount;
   final Color meBgColor,
       meFgColor,
@@ -112,7 +110,6 @@ class _VoiceMessageState extends State<VoiceMessage>
         () => _remainingTime = widget.formatDuration!(p),
       ),
     );
-    widget.myPlayer = player;
   }
 
   @override
@@ -333,7 +330,6 @@ class _VoiceMessageState extends State<VoiceMessage>
        upperBound: noiseWidth,
        duration: _audioDuration,
      );
-     widget.myController = _controller!;
    }
 
     ///
