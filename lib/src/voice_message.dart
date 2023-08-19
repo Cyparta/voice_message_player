@@ -113,7 +113,6 @@ class _VoiceMessageState extends State<VoiceMessage>
       ),
     );
     widget.myPlayer = player;
-    widget.myController = _controller!;
   }
 
   @override
@@ -334,6 +333,7 @@ class _VoiceMessageState extends State<VoiceMessage>
        upperBound: noiseWidth,
        duration: _audioDuration,
      );
+     widget.myController = _controller!;
    }
 
     ///
